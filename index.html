@@ -65,7 +65,7 @@ button {
         <input id="url" placeholder="Paste video link here...">
         <button onclick="download()">Download Now</button>
 
-        <div class="loader" id="loader">⏳ Loading...</div>
+        <div class="loader" id="loader">⏳ Fetching Video...</div>
         <div id="result"></div>
     </div>
 </div>
@@ -82,21 +82,32 @@ async function download(){
     document.getElementById("loader").style.display="block";
     document.getElementById("result").innerHTML="";
 
-    let api = "https://api.vevioz.com/api/button/mp4?url=" + encodeURIComponent(url);
+    // Multiple APIs (fallback system)
+    let apis = [
+        "https://api.vevioz.com/api/button/mp4?url=",
+        "https://save-from.net/api/convert?url=",
+        "https://api.savetube.me/info?url="
+    ];
 
-    try{
-        let res = await fetch(api);
-        let data = await res.text();
+    for(let api of apis){
+        try{
+            let res = await fetch(api + encodeURIComponent(url));
+            let data = await res.text();
 
-        document.getElementById("loader").style.display="none";
-        document.getElementById("result").innerHTML=data;
-
-    }catch{
-        document.getElementById("loader").innerHTML="Error loading";
+            // Valid response check
+            if(data && data.length > 200){
+                document.getElementById("loader").style.display="none";
+                document.getElementById("result").innerHTML = data;
+                return;
+            }
+        }catch(e){}
     }
+
+    document.getElementById("loader").style.display="none";
+    document.getElementById("result").innerHTML =
+        "❌ Video load failed<br><br>✔️ Try another link<br>✔️ Use public reel/video link";
 }
 </script>
 
 </body>
 </html>
-<!-- force update -->
