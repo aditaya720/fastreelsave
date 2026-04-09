@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FastReelSave - Instagram & Facebook Video Downloader HD</title>
+
+<meta name="description" content="Download Instagram reels and Facebook videos in HD quality for free. Fast and secure downloader.">
+<meta name="keywords" content="instagram video downloader, reels download hd, facebook video downloader">
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(135deg,#ff416c,#ff4b2b);
+    text-align:center;
+    color:white;
+}
+
+.container {
+    padding:20px;
+}
+
+.box {
+    background:white;
+    color:black;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+input {
+    width:90%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+}
+
+button {
+    margin-top:10px;
+    padding:12px;
+    width:90%;
+    border:none;
+    border-radius:10px;
+    background:#6a11cb;
+    color:white;
+    font-size:16px;
+}
+
+.loader {
+    display:none;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>📥 FastReelSave</h1>
+    <p>Download Instagram & Facebook Videos in HD</p>
+
+    <div class="box">
+        <input id="url" placeholder="Paste video link here...">
+        <button onclick="download()">Download Now</button>
+
+        <div class="loader" id="loader">⏳ Loading...</div>
+        <div id="result"></div>
+    </div>
+</div>
+
+<script>
+async function download(){
+    let url = document.getElementById("url").value;
+
+    if(!url){
+        alert("Paste link first");
+        return;
+    }
+
+    document.getElementById("loader").style.display="block";
+    document.getElementById("result").innerHTML="";
+
+    let api = "https://api.vevioz.com/api/button/mp4?url=" + encodeURIComponent(url);
+
+    try{
+        let res = await fetch(api);
+        let data = await res.text();
+
+        document.getElementById("loader").style.display="none";
+        document.getElementById("result").innerHTML=data;
+
+    }catch{
+        document.getElementById("loader").innerHTML="Error loading";
+    }
+}
+</script>
+
+</body>
+</html>
